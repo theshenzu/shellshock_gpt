@@ -22,11 +22,9 @@ class ReplHandler(ChatHandler):
 
         info_message = (
             "Entering REPL mode, press Ctrl+C to exit."
-            if not self.role.name == DefaultRoles.SHELL.value
-            else (
-                "Entering shell REPL mode, type [e] to execute commands "
-                "or [d] to describe the commands, press Ctrl+C to exit."
-            )
+            if self.role.name != DefaultRoles.SHELL.value
+            else "Entering shell REPL mode, type [e] to execute commands "
+            "or [d] to describe the commands, press Ctrl+C to exit."
         )
         typer.secho(info_message, fg="yellow")
 
