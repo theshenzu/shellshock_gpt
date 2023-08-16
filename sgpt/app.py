@@ -143,10 +143,10 @@ def main(
     if chat and repl:
         raise BadArgumentUsage("--chat and --repl options cannot be used together.")
 
-    if editor and stdin_passed:
-        raise BadArgumentUsage("--editor option cannot be used with stdin input.")
-
     if editor:
+        if stdin_passed:
+            raise BadArgumentUsage("--editor option cannot be used with stdin input.")
+
         prompt = get_edited_prompt()
 
     role_class = (

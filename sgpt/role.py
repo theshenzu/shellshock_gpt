@@ -82,11 +82,11 @@ class SystemRole:
     def os_name(cls) -> str:
         current_platform = platform.system()
         if current_platform == "Linux":
-            return "Linux/" + distro_name(pretty=True)
+            return f"Linux/{distro_name(pretty=True)}"
         if current_platform == "Windows":
-            return "Windows " + platform.release()
+            return f"Windows {platform.release()}"
         if current_platform == "Darwin":
-            return "Darwin/MacOS " + platform.mac_ver()[0]
+            return f"Darwin/MacOS {platform.mac_ver()[0]}"
         return current_platform
 
     @classmethod
@@ -169,22 +169,21 @@ class SystemRole:
         self.file_path.unlink()
 
     def make_prompt(self, request: str, initial: bool) -> str:
-        if initial:
-            prompt = PROMPT_TEMPLATE.format(
+        return (
+            PROMPT_TEMPLATE.format(
                 name=self.name,
                 role=self.role,
                 request=request,
                 expecting=self.expecting,
             )
-        else:
-            prompt = f"{request}\n{self.expecting}:"
-
-        return prompt
+            if initial
+            else f"{request}\n{self.expecting}:"
+        )
 
     def same_role(self, initial_message: str) -> bool:
         if not initial_message:
             return False
-        return True if f"Role name: {self.name}" in initial_message else False
+        return f"Role name: {self.name}" in initial_message
 
 
 class DefaultRoles(Enum):

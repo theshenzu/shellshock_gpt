@@ -61,9 +61,7 @@ class Config(dict):  # type: ignore
 
     def _write(self) -> None:
         with open(self.config_path, "w", encoding="utf-8") as file:
-            string_config = ""
-            for key, value in self.items():
-                string_config += f"{key}={value}\n"
+            string_config = "".join(f"{key}={value}\n" for key, value in self.items())
             file.write(string_config)
 
     def _read(self) -> None:
@@ -74,11 +72,10 @@ class Config(dict):  # type: ignore
                     self[key] = value
 
     def get(self, key: str) -> str:  # type: ignore
-        # Prioritize environment variables over config file.
-        value = os.getenv(key) or super().get(key)
-        if not value:
+        if value := os.getenv(key) or super().get(key):
+            return value
+        else:
             raise UsageError(f"Missing config key: {key}")
-        return value
 
 
 cfg = Config(SHELL_GPT_CONFIG_PATH, **DEFAULT_CONFIG)
